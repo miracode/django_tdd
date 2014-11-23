@@ -34,9 +34,6 @@ class NewVisitorTest(unittest.TestCase):
         # "1: Buy peacock feathers" as an item in a to-do list
         inputbox.send_keys(Keys.ENTER)
 
-        import time
-        time.sleep(10)
-
         # element returns element, raising exception if not found
         table = self.browser.find_element_by_id('id_list_table')
         # element*s* returns a list (which may be empty)
