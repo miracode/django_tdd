@@ -41,7 +41,7 @@ class NewVisitorTest(LiveServerTestCase):
         # "1: Buy peacock feathers" as an item in a to-do list
         inputbox.send_keys(Keys.ENTER)
         user_list_url = self.browser.current_url
-        self.assertRegexpMatches(user_list_url, '/list/.+')
+        self.assertRegexpMatches(user_list_url, '/lists/.+')
         self.check_for_row_in_list_table('1: Buy peacock feathers')
 
         # There is still a text box inviting user to add another item
@@ -74,7 +74,7 @@ class NewVisitorTest(LiveServerTestCase):
 
         # New user gets his own unique URL
         new_user_list_url = self.browser.current_url
-        self.assertRegexpMatches(new_user_list_url, '/list/.+')
+        self.assertRegexpMatches(new_user_list_url, '/lists/.+')
         self.assertNotEqual(new_user_list_url, user_list_url)
 
         # Again, there is no sign of old user's list
