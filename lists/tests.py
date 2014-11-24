@@ -21,11 +21,6 @@ class HomePageTest(TestCase):
         # use decode() to convert bytes into python
         self.assertEqual(response.content.decode(), expected_html)
 
-    def test_home_page_only_saves_items_when_necessary(self):
-        request = HttpRequest()
-        home_page(request)
-        self.assertEqual(Item.objects.count(), 0)
-
 
 class ItemModelTest(TestCase):
 
