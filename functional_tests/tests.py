@@ -40,8 +40,8 @@ class NewVisitorTest(LiveServerTestCase):
         # When user hits enter, the page updates and pages lists
         # "1: Buy peacock feathers" as an item in a to-do list
         inputbox.send_keys(Keys.ENTER)
-
-        # element returns element, raising exception if not found
+        user_list_url = self.browser.current_url
+        self.assertRegexpMatches(user_list_url, '/list/.+')
         self.check_for_row_in_list_table('1: Buy peacock feathers')
 
         # There is still a text box inviting user to add another item
@@ -54,11 +54,32 @@ class NewVisitorTest(LiveServerTestCase):
         self.check_for_row_in_list_table('1: Buy peacock feathers')
         self.check_for_row_in_list_table('2: Use peacock feathers to make a fly')
 
-        # User wonders whether the site will remember her list.  She then sees
-        # that the site has generated a unique URL for her -- there is some
-        # explanitory text to that effect
-        self.fail('Finish the test!')
+        # A new user comes to the site
 
-        # She visits that URL - her to-do list is still there.
+        ## Make new browser session
+        self.browser.quit()
+        self.browser = webdriver.Chrome()
 
-        # Satisfied she goes back to sleep
+        # The new user visits the home page.  There is no sighn of old user's
+        # list
+        self.browser.get(self.live_server_url)
+        page_text = self.browser.find_element_by_tag_name('body').text
+        self.assertNotIn('Buy peacock feathers', page_text)
+        self.assertNotIn('make a fly', page_text)
+
+        # New user starts a new list
+        inputbox = self.browser.find_element_by_id('id_new_item')
+        inputbox.send_keys('Buy milk')
+        inputbox.send_keys(Keys.ENTER)
+
+        # New user gets his own unique URL
+        new_user_list_url = self.browser.current_url
+        self.assertRegexpMatches(new_user_list_url, '/list/.+')
+        self.assertNotEqual(new_user_list_url, user_list_url)
+
+        # Again, there is no sign of old user's list
+        page_text = self.browser.find_element_by_tag_name('body').text
+        self.assertNotIn('Buy peacock feathers', page_text)
+        self.assertIn('Buy milk', page_text)
+
+        # Satisfied, they go to sleep
